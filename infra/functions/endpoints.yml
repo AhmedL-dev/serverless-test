@@ -1,0 +1,63 @@
+getPlayerScore:
+  handler: lambdas/endpoints/getPlayerScore.handler
+  events:
+    - http:
+        path: get-player-score/{ID}
+        method: GET
+        cors: true
+createPlayerScore:
+  handler: lambdas/endpoints/createPlayerScore.handler
+  events:
+    - http:
+        path: create-player-score/{ID}
+        method: POST
+        cors: true
+
+createFile:
+  handler: lambdas/endpoints/createFile.handler
+  events:
+    - http:
+        path: create-file/{fileName}
+        method: POST
+        cors: true
+getFile:
+  handler: lambdas/endpoints/getFile.handler
+  events:
+    - http:
+        path: get-file/{fileName}
+        method: GET
+        cors: true
+
+sendEmail:
+  handler: lambdas/endpoints/sendEmail.handler
+  events:
+    - http:
+        path: send-email
+        method: POST
+        cors: true
+testEndPoint:
+  handler: lambdas/endpoints/testEndPoint.handler
+  events:
+    - http:
+        path: test
+        method: GET
+        cors: true
+        authorizer:
+          name: authorizerAnyToken
+          type: request
+          identitySource: method.request.header.X-Amz-Security-Token
+          scopes:
+            - user.id
+            - user.email
+
+proxy:
+  handler: lambdas/endpoints/proxy.handler
+  events:
+    - http:
+        path: api/backend/{proxy+}
+        method: ANY
+        cors: true
+        authorizer:
+          name: authorizerAnyToken
+          type: request
+          identitySource: method.request.header.X-Amz-Security-Token

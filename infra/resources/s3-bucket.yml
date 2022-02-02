@@ -1,0 +1,5 @@
+Resources:
+  DemoBucketUpload:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: demo-bucket-1

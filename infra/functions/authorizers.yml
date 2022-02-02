@@ -1,0 +1,2 @@
+authorizerAnyToken:
+  handler: lambdas/authorisers/anyToken.handler

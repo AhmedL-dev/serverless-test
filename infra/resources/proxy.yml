@@ -1,0 +1,47 @@
+Resources:
+  Gateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: gateway
+      Description: "test-serverless-http-proxy"
+
+  ApiGatewayBasePath:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      #   ParentId:
+      #     Fn::GetAtt:
+      #       - Gateway
+      #       - RootResourceId
+      #   PathPart: "api/backend/{proxy+}"
+      #   RestApiId:
+      #     Ref: !Ref Gateway
+      ParentId: Gateway
+      PathPart: "api/backend/{proxy+}"
+      RestApiId: Gateway
+    DependsOn:
+      - Gateway
+  ProxyMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      # AuthorizerId: Authorizer
+      HttpMethod: ANY
+      Integration:
+        IntegrationHttpMethod: ANY
+        Type: HTTP_PROXY
+        Uri: http://localhost:3000/api/backend/{proxy}
+        # Uri:  ${self:custom.uri.${self:custom.currentStage}}
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestParameters:
+          "integration.request.path.proxy": "method.request.path.proxy"
+      MethodResponses:
+        - StatusCode: 200
+      RequestParameters:
+        "method.request.path.proxy": true
+      ResourceId:
+        # Ref: ProxyPath
+        Ref: ApiGatewayBasePath
+      RestApiId:
+        Ref: Gateway
+      DependsOn:
+        - ApiGatewayBasePath
