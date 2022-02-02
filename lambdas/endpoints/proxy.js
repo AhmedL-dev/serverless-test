@@ -21,6 +21,7 @@ exports.handler = async event => {
       headers: {
         ...event.headers,
         "Content-Type": "",
+        requestContext: JSON.stringify(event.requestContext),
       },
     };
     const response = await instance(config);
